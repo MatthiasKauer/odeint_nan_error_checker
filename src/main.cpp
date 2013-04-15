@@ -44,10 +44,11 @@ void odeint_bugtest1(){
     double adxdt = 1.0;
 
     typedef runge_kutta_cash_karp54<state_type> error_stepper_type;
-    typedef controlled_runge_kutta<error_stepper_type> controlled_stepper_type;
+    typedef nan_error_checker<double> error_checker_type;
+    typedef controlled_runge_kutta< error_stepper_type , error_checker_type > controlled_stepper_type;
 
 //    controlled_stepper_type cs(default_error_checker<double>(abs_tol, rel_tol, ax, adxdt));
-    nan_error_checker<double> nec(abs_tol, rel_tol, ax, adxdt);
+    error_checker_type nec(abs_tol, rel_tol, ax, adxdt);
     controlled_stepper_type cs(nec);
     controlled_step_result res = cs.try_step(mitsos6, x, t,dt);
 
